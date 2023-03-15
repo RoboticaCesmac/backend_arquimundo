@@ -4,11 +4,13 @@ from PIL import Image
 from flask import Flask, request, jsonify
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image as image_utils
-from tensorflow.keras.applications import vgg16
+# from tensorflow.keras.applications import vgg16
+from tensorflow.keras.applications import efficientnet
+
 
 app = Flask(__name__)
-model = load_model('ArquiMundo002.h5')
-feature_extraction_model = vgg16.VGG16(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
+model = load_model('acuracia-93_94-Enet.h5')
+feature_extraction_model = efficientnet.EfficientNetB0(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
 
 class_labels = [
     'Barroca',
@@ -23,7 +25,7 @@ def preprocess_image(image):
     img = Image.open(io.BytesIO(image)).resize((224, 224))
     image_array = image_utils.img_to_array(img)
     images = np.expand_dims(image_array, axis=0)
-    return vgg16.preprocess_input(images)
+    return efficientnet.preprocess_input(images)
 
 
 @app.route('/classify', methods=['POST'])
