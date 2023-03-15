@@ -7,7 +7,7 @@ from tensorflow.keras.preprocessing import image as image_utils
 from tensorflow.keras.applications import vgg16
 
 app = Flask(__name__)
-model = load_model('ArquiMundo001.h5')
+model = load_model('ArquiMundo002.h5')
 feature_extraction_model = vgg16.VGG16(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
 
 class_labels = [
