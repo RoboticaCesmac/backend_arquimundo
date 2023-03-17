@@ -1,3 +1,4 @@
+import codon
 import io
 import numpy as np
 from PIL import Image
@@ -21,11 +22,26 @@ class_labels = [
 ]
 
 
+# @codon.jit(pyvars=['image_utils', 'np', 'efficientnet', 'Image', 'io'])
 def preprocess_image(image):
     img = Image.open(io.BytesIO(image)).resize((224, 224))
     image_array = image_utils.img_to_array(img)
     images = np.expand_dims(image_array, axis=0)
     return efficientnet.preprocess_input(images)
+
+
+# @codon.jit(pyvars=['preprocess_image', 'np', 'class_labels'])
+def classify_architecture(image, model, feature_extraction_model):
+    """Classify the architecture style in the given image using the provided models."""
+    preprocessed_image = preprocess_image(image)
+    features = feature_extraction_model.predict(preprocessed_image)
+    results = model.predict(features)
+    single_result = results[0]
+    most_likely_class_index = int(np.argmax(single_result))
+    class_likelihood = single_result[most_likely_class_index]
+    class_label = class_labels[most_likely_class_index]
+
+    return class_label, float(class_likelihood)
 
 
 @app.route('/classify', methods=['POST'])
@@ -34,13 +50,7 @@ def classify_image():
         return jsonify({'error': 'No image provided'}), 400
 
     image = request.files['image'].read()
-    preprocessed_image = preprocess_image(image)
-    features = feature_extraction_model.predict(preprocessed_image)
-    results = model.predict(features)
-    single_result = results[0]
-    most_likely_class_index = int(np.argmax(single_result))
-    class_likelihood = single_result[most_likely_class_index]
-    class_label = class_labels[most_likely_class_index]
+    class_label, class_likelihood = classify_architecture(image, model, feature_extraction_model)
 
     response = {
         'architecture': class_label,
