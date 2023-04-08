@@ -1,4 +1,4 @@
-import codon
+# import codon
 import io
 import numpy as np
 from PIL import Image
@@ -10,21 +10,29 @@ from tensorflow.keras.applications import efficientnet
 
 
 app = Flask(__name__)
-model = load_model('acuracia-93_94-Enet.h5')
+model = load_model('02-acuracia-82_26-Enet.h5')
 feature_extraction_model = efficientnet.EfficientNetB0(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
 
 class_labels = [
-    'Barroca',
-    'Eclética',
-    'Grega',
-    'Moderna',
-    'Renascentista'
-]
+        'Art Déco',
+        'Art Nouveau',
+        'Barroca',
+        'Contemporânea',
+        'Eclética',
+        'Grega',
+        'Islâmica',
+        'Japonesa',
+        'Moderna',
+        'Pós-Moderna',
+        'Renascentista'
+    ]
 
 
 # @codon.jit(pyvars=['image_utils', 'np', 'efficientnet', 'Image', 'io'])
 def preprocess_image(image):
     img = Image.open(io.BytesIO(image)).resize((224, 224))
+    if img.mode == 'RGBA':
+        img = img.convert('RGB')
     image_array = image_utils.img_to_array(img)
     images = np.expand_dims(image_array, axis=0)
     return efficientnet.preprocess_input(images)
