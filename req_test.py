@@ -4,6 +4,7 @@ import os
 import glob
 
 url = 'http://127.0.0.1:5000/classify'
+# url = 'https://ce3e-2804-389-8023-950-ddbc-9923-12f4-2332.sa.ngrok.io'
 folder_path = './fotos_teste/'
 image_paths = glob.glob(os.path.join(folder_path, '*.jpg'))
 
