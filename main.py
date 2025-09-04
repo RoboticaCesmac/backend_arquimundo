@@ -10,7 +10,7 @@ from tensorflow.keras.applications import efficientnet
 
 
 app = Flask(__name__)
-model = load_model('03-acuracia-80_26-Enet.h5')
+model = load_model('03-acuracia-80_26-ENet.h5')
 feature_extraction_model = efficientnet.EfficientNetB0(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
 
 class_labels = [
