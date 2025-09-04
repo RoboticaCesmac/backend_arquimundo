@@ -13,6 +13,6 @@ def split_file(file_path, part_size):
     print(f"File split into {part_num} parts.")
 
 
-file_path = "./02-acuracia-79_03-ENet.h5"
+file_path = "./models/02-acuracia-79_03-ENet.h5"
 part_size = 90 * 1024 * 1024  # 100 MB
 split_file(file_path, part_size)
